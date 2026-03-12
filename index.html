@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three Bets — WorldFirst Product Concepts</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', -apple-system, sans-serif;
+    color: #1F2323;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 80px 32px 120px;
+  }
+
+  .label {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(255,0,81,0.06);
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #FF0051;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 36px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    margin-bottom: 12px;
+  }
+  h1 span { color: #FF0051; }
+
+  .subtitle {
+    font-size: 15px;
+    color: #69727D;
+    line-height: 1.6;
+    max-width: 520px;
+    margin-bottom: 56px;
+  }
+
+  .bets { display: flex; flex-direction: column; gap: 12px; }
+
+  .bet {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 28px;
+    background: #fafafa;
+    border-radius: 14px;
+    text-decoration: none;
+    color: #1F2323;
+    transition: all 0.2s;
+  }
+  .bet:hover {
+    background: #f5f5f5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+  }
+
+  .bet-num {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: #1F2323;
+    color: #fff;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .bet:nth-child(2) .bet-num { background: #FF0051; }
+  .bet:nth-child(3) .bet-num { background: #10b981; }
+
+  .bet-content { flex: 1; }
+  .bet-title { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; margin-bottom: 3px; }
+  .bet-desc { font-size: 13px; color: #90969A; line-height: 1.4; }
+
+  .bet-arrow {
+    font-size: 18px;
+    color: #d0d0d0;
+    transition: color 0.2s;
+  }
+  .bet:hover .bet-arrow { color: #FF0051; }
+
+  .footer {
+    margin-top: 64px;
+    padding-top: 24px;
+    border-top: 1px solid #f0f0f0;
+    font-size: 12px;
+    color: #c0c0c0;
+    display: flex;
+    justify-content: space-between;
+  }
+  .footer a { color: #FF0051; text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .page { padding: 48px 20px 80px; }
+    h1 { font-size: 28px; }
+    .bet { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="label">Product Concepts</div>
+  <h1>Three Bets for a Payment Company <span>Without a Selling Point</span></h1>
+  <p class="subtitle">Product-level bets that would give marketing something real to work with. Each one embeds WorldFirst at a friction point in cross-border trade.</p>
+
+  <div class="bets">
+    <a href="bet1_ai_payment_portal.html" class="bet">
+      <div class="bet-num">1</div>
+      <div class="bet-content">
+        <div class="bet-title">AI Service Payment Portal</div>
+        <div class="bet-desc">The checkout layer for Chinese AI companies selling to global customers</div>
+      </div>
+      <div class="bet-arrow">→</div>
+    </a>
+
+    <a href="bet2_payment_link.html" class="bet">
+      <div class="bet-num">2</div>
+      <div class="bet-content">
+        <div class="bet-title">Universal Payment Request</div>
+        <div class="bet-desc">A supplier payment link that doesn't gate on WorldFirst registration</div>
+      </div>
+      <div class="bet-arrow">→</div>
+    </a>
+
+    <a href="bet3_escrow.html" class="bet">
+      <div class="bet-num">3</div>
+      <div class="bet-content">
+        <div class="bet-title">Escrow-Protected Direct Payments</div>
+        <div class="bet-desc">Trade Assurance for direct orders — the only defensible moat</div>
+      </div>
+      <div class="bet-arrow">→</div>
+    </a>
+  </div>
+
+  <div class="footer">
+    <span>March 2026</span>
+    <a href="https://docs.google.com/document/d/1Om57mloPAdx1_ZypOo9n3j3_WrRs_aSl/edit" target="_blank">Read the blog →</a>
+  </div>
+</div>
+
+</body>
+</html>

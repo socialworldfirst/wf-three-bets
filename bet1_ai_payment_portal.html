@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout — Kimi API</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', -apple-system, sans-serif;
+    color: #1F2323;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .topbar {
+    border-bottom: 1px solid #f0f0f0;
+    padding: 0 40px;
+    height: 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand-icon {
+    width: 32px; height: 32px;
+    background: #6366f1;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-weight: 600; font-size: 14px;
+  }
+  .brand-name { font-size: 14px; font-weight: 600; }
+  .brand-sub { font-size: 12px; color: #90969A; }
+  .powered { font-size: 12px; color: #90969A; display: flex; align-items: center; gap: 6px; }
+  .powered b { color: #FF0051; font-weight: 600; }
+
+  .layout {
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 48px;
+  }
+
+  h2 { font-size: 14px; font-weight: 600; color: #1F2323; margin-bottom: 20px; }
+  .section { margin-bottom: 40px; }
+
+  /* Service Options */
+  .option {
+    padding: 16px;
+    border: 1.5px solid #f0f0f0;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: border-color 0.15s;
+  }
+  .option:hover { border-color: #d0d0d0; }
+  .option.active { border-color: #FF0051; }
+  .option-left { display: flex; align-items: center; gap: 12px; }
+  .radio {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid #d0d0d0;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.15s;
+  }
+  .option.active .radio { border-color: #FF0051; }
+  .option.active .radio::after { content: ''; width: 8px; height: 8px; border-radius: 50%; background: #FF0051; }
+  .option-name { font-size: 13px; font-weight: 500; }
+  .option-desc { font-size: 11px; color: #90969A; margin-top: 1px; }
+  .option-price { font-size: 14px; font-weight: 600; text-align: right; }
+  .option-unit { font-size: 11px; color: #90969A; }
+
+  /* Quantity */
+  .qty-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+  }
+  .qty-label { font-size: 13px; color: #484F56; }
+  .qty-controls { display: flex; align-items: center; gap: 14px; }
+  .qty-btn {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    border: 1.5px solid #e8e8e8;
+    background: #fff;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.15s;
+    font-family: inherit;
+    color: #484F56;
+  }
+  .qty-btn:hover { border-color: #1F2323; }
+  .qty-val { font-size: 15px; font-weight: 600; min-width: 32px; text-align: center; }
+
+  .toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 0;
+    border-top: 1px solid #f5f5f5;
+  }
+  .toggle-text { font-size: 13px; color: #484F56; }
+  .toggle {
+    width: 40px; height: 22px;
+    border-radius: 11px;
+    background: #e0e0e0;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .toggle.on { background: #FF0051; }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 18px; height: 18px;
+    background: #fff;
+    border-radius: 50%;
+    top: 2px; left: 2px;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+  .toggle.on::after { transform: translateX(18px); }
+
+  /* FX */
+  .fx {
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 16px;
+    margin-top: 16px;
+  }
+  .fx-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+    font-size: 12px;
+    color: #69727D;
+  }
+  .fx-row.total {
+    border-top: 1px solid #eee;
+    margin-top: 8px;
+    padding-top: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #1F2323;
+  }
+  .rate-lock {
+    font-size: 11px;
+    color: #10b981;
+    font-weight: 500;
+  }
+
+  /* Payment Methods */
+  .pm {
+    padding: 14px 16px;
+    border: 1.5px solid #f0f0f0;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.15s;
+  }
+  .pm:hover { border-color: #d0d0d0; }
+  .pm.sel { border-color: #FF0051; }
+  .pm-icon {
+    width: 36px; height: 24px;
+    border-radius: 4px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700; color: #fff;
+  }
+  .pm-name { font-size: 13px; font-weight: 500; }
+  .pm-sub { font-size: 11px; color: #90969A; }
+  .pm-save {
+    margin-left: auto;
+    font-size: 11px;
+    font-weight: 600;
+    color: #FF0051;
+  }
+
+  /* Summary */
+  .summary {
+    position: sticky;
+    top: 32px;
+  }
+  .summary-card {
+    background: #fafafa;
+    border-radius: 12px;
+    padding: 28px;
+  }
+  .summary-title { font-size: 13px; font-weight: 600; color: #90969A; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 20px; }
+  .s-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 6px 0;
+    font-size: 13px;
+    color: #69727D;
+  }
+  .s-row span:last-child { color: #1F2323; font-weight: 500; }
+  .s-row.green span:last-child { color: #10b981; }
+  .s-divider { height: 1px; background: #e8e8e8; margin: 14px 0; }
+  .s-total {
+    display: flex;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 700;
+    padding: 8px 0;
+    letter-spacing: -0.02em;
+  }
+
+  .pay-btn {
+    width: 100%;
+    padding: 14px;
+    background: #FF0051;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    margin-top: 16px;
+  }
+  .pay-btn:hover { background: #E0004A; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,0,81,0.2); }
+
+  .fine-print {
+    margin-top: 16px;
+    font-size: 11px;
+    color: #90969A;
+    line-height: 1.6;
+  }
+  .fine-print span { color: #10b981; }
+
+  .promo {
+    margin-top: 20px;
+    padding: 16px;
+    border: 1px solid rgba(255,0,81,0.1);
+    border-radius: 10px;
+    text-align: center;
+  }
+  .promo-text { font-size: 12px; color: #484F56; }
+  .promo-text b { color: #FF0051; }
+  .promo-link { display: block; margin-top: 6px; font-size: 12px; color: #FF0051; text-decoration: none; font-weight: 600; }
+
+  .footer {
+    text-align: center;
+    padding: 16px;
+    font-size: 11px;
+    color: #c0c0c0;
+    margin-top: 40px;
+  }
+
+  @media (max-width: 760px) {
+    .layout { grid-template-columns: 1fr; padding: 32px 20px; gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<a href="index.html" style="display:flex;align-items:center;gap:6px;padding:10px 40px;font-size:12px;color:#90969A;text-decoration:none;font-family:'Poppins',sans-serif;background:#fafafa;border-bottom:1px solid #f0f0f0;font-weight:500;transition:color 0.15s;" onmouseover="this.style.color='#FF0051'" onmouseout="this.style.color='#90969A'">← All Concepts</a>
+<div class="topbar">
+  <div class="brand">
+    <div class="brand-icon">K</div>
+    <div>
+      <div class="brand-name">Kimi API</div>
+      <div class="brand-sub">Moonshot AI</div>
+    </div>
+  </div>
+  <div class="powered">Payments by <b>WorldFirst</b></div>
+</div>
+
+<div class="layout">
+  <div>
+    <div class="section">
+      <h2>Service</h2>
+      <div class="option active" onclick="sel(this)">
+        <div class="option-left">
+          <div class="radio"></div>
+          <div><div class="option-name">API Tokens</div><div class="option-desc">moonshot-v1 · 128K context</div></div>
+        </div>
+        <div><div class="option-price">€0.82</div><div class="option-unit">per 1M tokens</div></div>
+      </div>
+      <div class="option" onclick="sel(this)">
+        <div class="option-left">
+          <div class="radio"></div>
+          <div><div class="option-name">Vision API</div><div class="option-desc">moonshot-v1-vision · Image + text</div></div>
+        </div>
+        <div><div class="option-price">€1.64</div><div class="option-unit">per 1M tokens</div></div>
+      </div>
+      <div class="option" onclick="sel(this)">
+        <div class="option-left">
+          <div class="radio"></div>
+          <div><div class="option-name">Enterprise</div><div class="option-desc">Dedicated capacity · Priority support</div></div>
+        </div>
+        <div><div class="option-price">€820</div><div class="option-unit">/ month</div></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Quantity</h2>
+      <div class="qty-row">
+        <div class="qty-label">Millions of tokens</div>
+        <div class="qty-controls">
+          <button class="qty-btn" onclick="chg(-10)">−</button>
+          <div class="qty-val" id="qv">50</div>
+          <button class="qty-btn" onclick="chg(10)">+</button>
+        </div>
+      </div>
+      <div class="toggle-row">
+        <div class="toggle-text">Auto-renew monthly</div>
+        <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="fx">
+        <div class="fx-row"><span>Base (CNY)</span><span id="cny">¥298.50</span></div>
+        <div class="fx-row"><span>Rate</span><span class="rate-lock">1 EUR = 7.7842 CNY · Locked</span></div>
+        <div class="fx-row"><span>FX markup</span><span>0.35%</span></div>
+        <div class="fx-row total"><span>Price</span><span id="eur">€41.00</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Payment</h2>
+      <div class="pm sel" onclick="selPM(this)">
+        <div class="pm-icon" style="background:#1F2323;">SEPA</div>
+        <div><div class="pm-name">Bank Transfer</div><div class="pm-sub">EUR bank account</div></div>
+      </div>
+      <div class="pm" onclick="selPM(this)">
+        <div class="pm-icon" style="background:#1677FF;">CARD</div>
+        <div><div class="pm-name">Card</div><div class="pm-sub">Visa, Mastercard, Amex</div></div>
+      </div>
+      <div class="pm" onclick="selPM(this)">
+        <div class="pm-icon" style="background:#FF0051;">WF</div>
+        <div><div class="pm-name">WorldFirst Balance</div><div class="pm-sub">Multi-currency account</div></div>
+        <div class="pm-save">Save 0.35%</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-card">
+      <div class="summary-title">Summary</div>
+      <div class="s-row"><span>Service</span><span>Kimi API Tokens</span></div>
+      <div class="s-row"><span>Volume</span><span id="sq">50M tokens</span></div>
+      <div class="s-row"><span>Billing</span><span>Monthly</span></div>
+      <div class="s-divider"></div>
+      <div class="s-row"><span>Subtotal</span><span id="ss">€41.00</span></div>
+      <div class="s-row"><span>FX fee</span><span id="sf">€0.14</span></div>
+      <div class="s-row green"><span>Processing</span><span>Waived</span></div>
+      <div class="s-divider"></div>
+      <div class="s-total"><span>Total</span><span id="st">€41.14</span></div>
+      <button class="pay-btn" onclick="pay()">Pay €41.14</button>
+      <div class="fine-print">
+        <span>✓</span> VAT invoice generated automatically<br>
+        <span>✓</span> RMB settlement in 1 business day
+      </div>
+      <div class="promo">
+        <div class="promo-text"><b>Save €14.39/mo</b> with a WorldFirst account</div>
+        <a href="#" class="promo-link">Open free account →</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">256-bit encrypted · FCA regulated · Ant International</div>
+
+<script>
+  let q=50;
+  function chg(d){q=Math.max(10,q+d);upd()}
+  function upd(){
+    let s=(q*0.82).toFixed(2),f=(s*0.0035).toFixed(2),t=(+s+ +f).toFixed(2);
+    document.getElementById('qv').textContent=q;
+    document.getElementById('cny').textContent='¥'+(s*7.7842).toFixed(2);
+    document.getElementById('eur').textContent='€'+s;
+    document.getElementById('sq').textContent=q+'M tokens';
+    document.getElementById('ss').textContent='€'+s;
+    document.getElementById('sf').textContent='€'+f;
+    document.getElementById('st').textContent='€'+t;
+    document.querySelector('.pay-btn').textContent='Pay €'+t;
+  }
+  function sel(e){document.querySelectorAll('.option').forEach(o=>o.classList.remove('active'));e.classList.add('active')}
+  function selPM(e){document.querySelectorAll('.pm').forEach(p=>p.classList.remove('sel'));e.classList.add('sel')}
+  function pay(){let b=document.querySelector('.pay-btn');b.textContent='Processing...';b.style.background='#10b981';setTimeout(()=>b.textContent='✓ Paid',1500)}
+</script>
+</body>
+</html>

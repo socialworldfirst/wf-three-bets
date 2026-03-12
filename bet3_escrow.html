@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escrow — WorldFirst</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', -apple-system, sans-serif;
+    color: #1F2323;
+    background: #f7f7f8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .dash { max-width: 1040px; margin: 0 auto; padding: 32px 32px 80px; }
+
+  .tabs {
+    display: inline-flex;
+    background: #fff;
+    border-radius: 50px;
+    padding: 3px;
+    margin-bottom: 28px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .tab {
+    padding: 9px 20px;
+    border: none;
+    background: transparent;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #90969A;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .tab.on { background: #1F2323; color: #fff; }
+
+  /* Hero */
+  .hero {
+    background: #1F2323;
+    border-radius: 16px;
+    padding: 40px;
+    color: #fff;
+    margin-bottom: 24px;
+  }
+  .hero-label {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(255,0,81,0.1);
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #FF0051;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+  }
+  .hero h1 span { color: #FF0051; }
+  .hero p { font-size: 14px; color: rgba(255,255,255,0.4); margin-top: 8px; }
+
+  /* Stats */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .stat {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .stat-l { font-size: 11px; color: #90969A; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+  .stat-v { font-size: 24px; font-weight: 700; margin-top: 6px; letter-spacing: -0.02em; }
+  .stat-s { font-size: 11px; color: #90969A; margin-top: 2px; }
+  .green { color: #10b981; }
+  .red { color: #FF0051; }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 20px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+  .card-h {
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #f5f5f5;
+  }
+  .card-h h3 { font-size: 14px; font-weight: 600; }
+  .badge {
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .badge-g { background: rgba(16,185,129,0.06); color: #10b981; }
+  .card-b { padding: 24px; }
+
+  /* Timeline */
+  .tl { padding-left: 28px; position: relative; }
+  .tl::before { content: ''; position: absolute; left: 10px; top: 8px; bottom: 8px; width: 1.5px; background: #f0f0f0; }
+  .tl-item { position: relative; padding: 0 0 24px 20px; }
+  .tl-item:last-child { padding-bottom: 0; }
+  .tl-dot {
+    position: absolute;
+    left: -23px;
+    top: 3px;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 9px; font-weight: 700;
+    z-index: 1;
+  }
+  .tl-done { background: #10b981; color: #fff; }
+  .tl-now { background: #FF0051; color: #fff; }
+  .tl-wait { background: #f5f5f5; color: #c0c0c0; }
+  .tl-title { font-size: 13px; font-weight: 600; }
+  .tl-desc { font-size: 12px; color: #90969A; margin-top: 2px; }
+  .tl-meta { font-size: 11px; color: #c0c0c0; margin-top: 4px; }
+
+  .tl-expand {
+    background: #fafafa;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 8px;
+  }
+  .te-row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 11px; }
+  .te-row + .te-row { border-top: 1px solid #f0f0f0; }
+  .te-l { color: #90969A; }
+  .te-v { font-weight: 500; }
+
+  /* Comparison */
+  .comp {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 1px;
+    background: #f0f0f0;
+    border-radius: 10px;
+    overflow: hidden;
+    font-size: 11px;
+  }
+  .cc { padding: 10px 12px; background: #fff; }
+  .cc-h { background: #fafafa; font-weight: 600; color: #90969A; text-transform: uppercase; letter-spacing: 0.04em; font-size: 10px; }
+  .cc-f { font-weight: 500; color: #1F2323; }
+  .cc-w { background: rgba(16,185,129,0.03); font-weight: 500; }
+
+  /* Escrow Amount */
+  .escrow-box {
+    text-align: center;
+    padding: 24px;
+    background: #fafafa;
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  .eb-label { font-size: 10px; font-weight: 600; color: #10b981; text-transform: uppercase; letter-spacing: 0.06em; }
+  .eb-amt { font-size: 32px; font-weight: 700; letter-spacing: -0.03em; margin: 6px 0; }
+  .eb-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 12px;
+    background: rgba(16,185,129,0.06);
+    border-radius: 50px;
+    font-size: 11px; font-weight: 500; color: #10b981;
+  }
+
+  .info-row { display: flex; justify-content: space-between; padding: 8px 0; font-size: 12px; }
+  .info-row + .info-row { border-top: 1px solid #f5f5f5; }
+  .ir-l { color: #90969A; }
+  .ir-v { font-weight: 500; }
+
+  .btns { display: flex; gap: 8px; margin-top: 20px; }
+  .btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 50px;
+    border: none;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.2s;
+  }
+  .btn-p { background: #FF0051; color: #fff; }
+  .btn-p:hover { background: #E0004A; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,0,81,0.2); }
+  .btn-s { background: #f5f5f5; color: #484F56; }
+  .btn-s:hover { background: #eee; }
+
+  /* Verify */
+  .vi { display: flex; align-items: center; gap: 12px; padding: 12px 0; }
+  .vi + .vi { border-top: 1px solid #f5f5f5; }
+  .vi-ico { width: 32px; height: 32px; border-radius: 8px; background: #fafafa; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .vi-name { font-size: 12px; font-weight: 500; }
+  .vi-desc { font-size: 11px; color: #90969A; }
+  .vi-st { margin-left: auto; font-size: 10px; font-weight: 600; padding: 3px 8px; border-radius: 50px; }
+  .st-done { background: rgba(16,185,129,0.06); color: #10b981; }
+  .st-wait { background: rgba(245,158,11,0.06); color: #f59e0b; }
+
+  /* Protection */
+  .prot { font-size: 12px; color: #484F56; line-height: 1.7; }
+  .prot b { color: #1F2323; }
+  .prot p + p { margin-top: 8px; }
+
+  /* Tagline */
+  .tagline {
+    background: #1F2323;
+    border-radius: 14px;
+    padding: 36px;
+    text-align: center;
+    color: #fff;
+    margin-top: 24px;
+  }
+  .tagline h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; }
+  .tagline h2 span { color: #FF0051; }
+  .tagline p { font-size: 13px; color: rgba(255,255,255,0.35); margin-top: 6px; }
+
+  /* Supplier View */
+  .supplier-view { display: none; }
+  .sv-notice {
+    padding: 14px 20px;
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    font-size: 12px;
+    color: #484F56;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .sv-notice b { color: #1677FF; }
+
+  .eb-blue { background: rgba(22,119,255,0.04); }
+  .eb-blue .eb-label { color: #1677FF; }
+  .eb-blue .eb-badge { background: rgba(22,119,255,0.06); color: #1677FF; }
+
+  .benefits { margin-top: 20px; padding: 16px; background: #fafafa; border-radius: 10px; }
+  .benefits-title { font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+  .benefits-text { font-size: 12px; color: #484F56; line-height: 1.8; }
+  .benefits-text b { color: #1F2323; }
+
+  .profile-center { text-align: center; padding: 20px 0; }
+  .profile-shield { font-size: 28px; margin-bottom: 8px; }
+  .profile-t { font-size: 15px; font-weight: 600; }
+  .profile-s { font-size: 12px; color: #90969A; }
+
+  .share {
+    margin-top: 16px;
+    padding: 10px;
+    background: #fafafa;
+    border-radius: 8px;
+    font-family: 'SF Mono', Menlo, monospace;
+    font-size: 11px;
+    color: #FF0051;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .share:hover { background: rgba(255,0,81,0.04); }
+
+  @media (max-width: 800px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .grid { grid-template-columns: 1fr; }
+    .dash { padding: 20px 16px; }
+    .hero { padding: 28px; }
+    .hero h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<a href="index.html" style="display:flex;align-items:center;gap:6px;padding:10px 32px;font-size:12px;color:#90969A;text-decoration:none;font-family:'Poppins',sans-serif;font-weight:500;max-width:1040px;margin:0 auto;transition:color 0.15s;" onmouseover="this.style.color='#FF0051'" onmouseout="this.style.color='#90969A'">← All Concepts</a>
+<div class="dash">
+  <div class="tabs">
+    <button class="tab on" onclick="swV(this,'buyer')">Buyer</button>
+    <button class="tab" onclick="swV(this,'supplier')">Supplier</button>
+  </div>
+
+  <div class="hero">
+    <div class="hero-label">Escrow Protected</div>
+    <h1>Your payment to China, <span>protected.</span></h1>
+    <p>Like Trade Assurance, but for direct orders.</p>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-l">Protected</div><div class="stat-v">$21,800</div><div class="stat-s">100% in escrow</div></div>
+    <div class="stat"><div class="stat-l">Status</div><div class="stat-v green">Held</div><div class="stat-s">Awaiting shipment</div></div>
+    <div class="stat"><div class="stat-l">Verification</div><div class="stat-v red">Logistics</div><div class="stat-s">Tracking + B/L</div></div>
+    <div class="stat"><div class="stat-l">Release</div><div class="stat-v">Mar 28</div><div class="stat-s">16 days</div></div>
+  </div>
+
+  <!-- Buyer -->
+  <div class="buyer-view" id="buyer-view">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <div class="card-h"><h3>Timeline</h3><span class="badge badge-g">In Progress</span></div>
+          <div class="card-b">
+            <div class="tl">
+              <div class="tl-item"><div class="tl-dot tl-done">✓</div><div class="tl-title">Payment Initiated</div><div class="tl-desc">$21,800 to escrow</div><div class="tl-meta">Mar 8 · 09:14</div></div>
+              <div class="tl-item"><div class="tl-dot tl-done">✓</div><div class="tl-title">Funds Secured</div><div class="tl-desc">Supplier notified</div><div class="tl-meta">Mar 8 · 14:22</div></div>
+              <div class="tl-item"><div class="tl-dot tl-done">✓</div><div class="tl-title">Production Started</div><div class="tl-desc">Est. completion Mar 18</div><div class="tl-meta">Mar 10</div></div>
+              <div class="tl-item">
+                <div class="tl-dot tl-now">4</div>
+                <div class="tl-title">Awaiting Shipment</div>
+                <div class="tl-desc">Funds held until verified</div>
+                <div class="tl-expand">
+                  <div class="te-row"><span class="te-l">Release trigger</span><span class="te-v">B/L + tracking</span></div>
+                  <div class="te-row"><span class="te-l">Verification</span><span class="te-v">Shenzhen partner</span></div>
+                  <div class="te-row"><span class="te-l">Dispute window</span><span class="te-v">7 days post-delivery</span></div>
+                </div>
+              </div>
+              <div class="tl-item"><div class="tl-dot tl-wait">5</div><div class="tl-title">Shipment Verified</div></div>
+              <div class="tl-item"><div class="tl-dot tl-wait">6</div><div class="tl-title">Funds Released</div></div>
+              <div class="tl-item"><div class="tl-dot tl-wait">7</div><div class="tl-title">Receipt Confirmed</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h3>vs Trade Assurance</h3></div>
+          <div class="card-b">
+            <div class="comp">
+              <div class="cc cc-h"></div><div class="cc cc-h">Alibaba TA</div><div class="cc cc-h" style="color:#FF0051;">WF Escrow</div>
+              <div class="cc cc-f">Works for</div><div class="cc">Alibaba only</div><div class="cc cc-w">Any supplier</div>
+              <div class="cc cc-f">Verification</div><div class="cc">Platform</div><div class="cc cc-w">On-ground + logistics</div>
+              <div class="cc cc-f">FX</div><div class="cc">Opaque</div><div class="cc cc-w">Rate locked</div>
+              <div class="cc cc-f">Markup</div><div class="cc">3–5% baked in</div><div class="cc cc-w">Direct pricing</div>
+              <div class="cc cc-f">Off-platform</div><div class="cc">No</div><div class="cc cc-w">Yes</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="card-b">
+            <div class="escrow-box">
+              <div class="eb-label">In Escrow</div>
+              <div class="eb-amt">$21,800</div>
+              <div class="eb-badge">Protected by WorldFirst</div>
+            </div>
+            <div class="info-row"><span class="ir-l">Order</span><span class="ir-v">PO-2026-1204</span></div>
+            <div class="info-row"><span class="ir-l">Supplier</span><span class="ir-v">Yiwu Minghe Trading</span></div>
+            <div class="info-row"><span class="ir-l">Product</span><span class="ir-v">Packaging × 50,000</span></div>
+            <div class="info-row"><span class="ir-l">Fee</span><span class="ir-v">1.5% ($327)</span></div>
+            <div class="info-row"><span class="ir-l">FX locked</span><span class="ir-v">1 USD = 7.3077 CNY</span></div>
+            <div class="btns">
+              <button class="btn btn-s" onclick="dispute()">Dispute</button>
+              <button class="btn btn-p" onclick="release()">Release Funds</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h3>Verification</h3></div>
+          <div class="card-b">
+            <div class="vi"><div class="vi-ico">📦</div><div><div class="vi-name">Logistics Tracking</div></div><span class="vi-st st-wait">Pending</span></div>
+            <div class="vi"><div class="vi-ico">📋</div><div><div class="vi-name">Bill of Lading</div></div><span class="vi-st st-wait">Pending</span></div>
+            <div class="vi"><div class="vi-ico">👁</div><div><div class="vi-name">On-Ground Inspection</div></div><span class="vi-st st-done">Done</span></div>
+            <div class="vi"><div class="vi-ico">📸</div><div><div class="vi-name">Photos</div></div><span class="vi-st st-done">Done</span></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><h3>Protection</h3></div>
+          <div class="card-b">
+            <div class="prot">
+              <p><b>Goods don't arrive?</b> Full refund from escrow.</p>
+              <p><b>Wrong specs?</b> Dispute within 7 days. We mediate.</p>
+              <p><b>All good?</b> Funds auto-release on shipment.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supplier -->
+  <div class="supplier-view" id="supplier-view">
+    <div class="sv-notice">Your buyer's payment of <b>$21,800</b> is confirmed and secured. Funds are <b>guaranteed</b> — ship with confidence.</div>
+    <div class="grid">
+      <div>
+        <div class="card">
+          <div class="card-h"><h3>PO-2026-1204</h3><span class="badge badge-g">Funds Secured</span></div>
+          <div class="card-b">
+            <div class="escrow-box eb-blue">
+              <div class="eb-label">Guaranteed</div>
+              <div class="eb-amt">¥159,308</div>
+              <div class="eb-badge">Releases on shipment</div>
+            </div>
+            <div class="info-row"><span class="ir-l">Buyer</span><span class="ir-v">Martin Schmidt, Berlin</span></div>
+            <div class="info-row"><span class="ir-l">Settlement</span><span class="ir-v">RMB to CMB account</span></div>
+            <div class="info-row"><span class="ir-l">Trigger</span><span class="ir-v">Upload B/L + tracking</span></div>
+            <div class="info-row"><span class="ir-l">Settlement time</span><span class="ir-v">1 business day</span></div>
+            <div class="btns"><button class="btn btn-p" style="width:100%;flex:none;" onclick="upload()">Upload Shipping Documents</button></div>
+            <div class="benefits">
+              <div class="benefits-title">Why this benefits you</div>
+              <div class="benefits-text">
+                <b>Guaranteed payment</b> — no chasing invoices<br>
+                <b>Build trust</b> — escrow history = reputation<br>
+                <b>Win buyers</b> — verified badge attracts new business<br>
+                <b>Faster settlement</b> — 1 day vs 3–5 day wire
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="card-h"><h3>Escrow Profile</h3></div>
+          <div class="card-b">
+            <div class="profile-center">
+              <div class="profile-shield">🛡️</div>
+              <div class="profile-t">Escrow Verified</div>
+              <div class="profile-s">12 transactions</div>
+            </div>
+            <div class="info-row"><span class="ir-l">Volume</span><span class="ir-v">$184,200</span></div>
+            <div class="info-row"><span class="ir-l">Disputes</span><span class="ir-v green">0%</span></div>
+            <div class="info-row"><span class="ir-l">Avg. release</span><span class="ir-v">1.2 days</span></div>
+            <div class="info-row"><span class="ir-l">Rating</span><span class="ir-v">4.9 ★</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-b" style="text-align:center;">
+            <div style="font-size:13px;font-weight:600;margin-bottom:4px;">Share profile</div>
+            <div style="font-size:11px;color:#90969A;margin-bottom:10px;">Build trust with new buyers</div>
+            <div class="share" onclick="this.textContent='✓ Copied'">pay.worldfirst.com/verify/yiwu-minghe</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tagline">
+    <h2>Your payment to China, <span>protected.</span></h2>
+    <p>Only on WorldFirst.</p>
+  </div>
+</div>
+
+<script>
+  function swV(btn,v){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+    btn.classList.add('on');
+    document.getElementById('buyer-view').style.display=v==='buyer'?'block':'none';
+    document.getElementById('supplier-view').style.display=v==='supplier'?'block':'none';
+  }
+  function release(){let b=event.target;b.textContent='Releasing...';setTimeout(()=>{b.textContent='✓ Released';b.style.background='#10b981'},1500)}
+  function dispute(){let b=event.target;b.textContent='Opening...';setTimeout(()=>{b.textContent='Dispute opened';b.style.background='#f59e0b';b.style.color='#fff'},1000)}
+  function upload(){let b=event.target;b.textContent='Uploading...';setTimeout(()=>{b.textContent='✓ Uploaded — verifying';b.style.background='#10b981'},1500)}
+</script>
+</body>
+</html>

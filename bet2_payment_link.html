@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Payment Request — WorldFirst</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Poppins', -apple-system, sans-serif;
+    color: #1F2323;
+    background: #f7f7f8;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .page { max-width: 480px; margin: 0 auto; padding: 32px 20px 60px; }
+
+  .tabs {
+    display: flex;
+    background: #fff;
+    border-radius: 50px;
+    padding: 3px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .tab {
+    flex: 1;
+    padding: 9px 16px;
+    border: none;
+    background: transparent;
+    border-radius: 50px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #90969A;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .tab.on { background: #1F2323; color: #fff; }
+
+  .counter {
+    padding: 12px 16px;
+    background: #fff;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: #484F56;
+    display: none;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .counter b { color: #1F2323; }
+
+  /* Supplier */
+  .supplier {
+    background: #fff;
+    border-radius: 16px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .supplier-top {
+    background: #1F2323;
+    padding: 28px 24px 24px;
+    text-align: center;
+    color: #fff;
+  }
+  .avatar {
+    width: 44px; height: 44px;
+    background: #FF0051;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+    font-size: 16px; font-weight: 600;
+  }
+  .s-name { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+  .s-loc { font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+  .verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 12px;
+    padding: 4px 12px;
+    background: rgba(16,185,129,0.12);
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #6ee7b7;
+  }
+  .stats-row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 14px 24px;
+    background: rgba(0,0,0,0.15);
+  }
+  .stat { text-align: center; }
+  .stat-v { font-size: 14px; font-weight: 600; }
+  .stat-l { font-size: 10px; color: rgba(255,255,255,0.35); }
+
+  .details { padding: 24px; }
+  .d-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    font-size: 13px;
+  }
+  .d-row + .d-row { border-top: 1px solid #f5f5f5; }
+  .d-label { color: #90969A; }
+  .d-value { font-weight: 500; }
+
+  .amount-box {
+    text-align: center;
+    padding: 24px;
+    background: #fafafa;
+    border-radius: 12px;
+    margin-top: 16px;
+  }
+  .a-sub { font-size: 12px; color: #90969A; }
+  .a-big { font-size: 36px; font-weight: 700; letter-spacing: -0.03em; margin: 4px 0; }
+  .a-rate { font-size: 11px; color: #10b981; font-weight: 500; margin-top: 4px; }
+
+  /* Pay Options */
+  .pay-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .pay-title { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+  .pay-sub { font-size: 12px; color: #90969A; margin-bottom: 20px; }
+
+  .po {
+    padding: 14px;
+    border: 1.5px solid #f0f0f0;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: border-color 0.15s;
+    position: relative;
+  }
+  .po:hover { border-color: #d0d0d0; }
+  .po.sel { border-color: #FF0051; }
+  .po-ico {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+    background: #fafafa;
+  }
+  .po-name { font-size: 13px; font-weight: 500; }
+  .po-desc { font-size: 11px; color: #90969A; }
+  .po-noreg { font-size: 10px; color: #10b981; font-weight: 500; margin-top: 2px; }
+  .po-arrow { margin-left: auto; color: #d0d0d0; font-size: 16px; }
+  .po-tag {
+    position: absolute;
+    top: -8px;
+    right: 12px;
+    background: #FF0051;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 50px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  .bank-exp {
+    display: none;
+    background: #fafafa;
+    border-radius: 10px;
+    padding: 14px;
+    margin: -2px 0 10px;
+  }
+  .bank-exp.show { display: block; }
+  .bk { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 12px; }
+  .bk + .bk { border-top: 1px solid #eee; }
+  .bk-l { color: #90969A; }
+  .bk-v { font-family: 'SF Mono', Menlo, monospace; font-size: 11px; font-weight: 500; }
+  .cp {
+    background: #FF0051;
+    color: #fff;
+    border: none;
+    padding: 3px 10px;
+    border-radius: 50px;
+    font-size: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-family: inherit;
+    margin-left: 6px;
+  }
+  .cp:hover { background: #E0004A; }
+
+  .cta-btn {
+    width: 100%;
+    padding: 14px;
+    background: #FF0051;
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+    margin-top: 16px;
+    transition: all 0.2s;
+  }
+  .cta-btn:hover { background: #E0004A; transform: translateY(-1px); box-shadow: 0 4px 16px rgba(255,0,81,0.2); }
+
+  /* Savings */
+  .savings {
+    background: #fff;
+    border: 1px solid rgba(255,0,81,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    text-align: center;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .sv-title { font-size: 12px; color: #FF0051; font-weight: 600; }
+  .sv-amt { font-size: 28px; font-weight: 700; letter-spacing: -0.03em; margin: 4px 0; }
+  .sv-desc { font-size: 12px; color: #69727D; margin-bottom: 12px; line-height: 1.5; }
+  .sv-cta {
+    display: inline-block;
+    padding: 10px 24px;
+    background: #FF0051;
+    color: #fff;
+    border-radius: 50px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+  .sv-cta:hover { background: #E0004A; }
+
+  /* Tracking */
+  .track {
+    background: #fff;
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  .track-title { font-size: 13px; font-weight: 600; margin-bottom: 20px; }
+  .steps { display: flex; justify-content: space-between; position: relative; }
+  .steps::before { content: ''; position: absolute; top: 14px; left: 28px; right: 28px; height: 2px; background: #f0f0f0; }
+  .step { display: flex; flex-direction: column; align-items: center; position: relative; z-index: 1; }
+  .dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: #f5f5f5;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 600;
+    margin-bottom: 6px;
+    color: #c0c0c0;
+  }
+  .dot.done { background: #10b981; color: #fff; }
+  .dot.now { background: #FF0051; color: #fff; }
+  .step-l { font-size: 10px; color: #90969A; text-align: center; line-height: 1.3; }
+
+  .footer { text-align: center; padding: 24px; font-size: 11px; color: #c0c0c0; }
+  .footer a { color: #FF0051; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<a href="index.html" style="display:flex;align-items:center;gap:6px;padding:10px 20px;font-size:12px;color:#90969A;text-decoration:none;font-family:'Poppins',sans-serif;font-weight:500;max-width:480px;margin:0 auto;transition:color 0.15s;" onmouseover="this.style.color='#FF0051'" onmouseout="this.style.color='#90969A'">← All Concepts</a>
+<div class="page">
+  <div class="tabs">
+    <button class="tab on" onclick="sw('first')">First Payment</button>
+    <button class="tab" onclick="sw('ret')">Returning (Tx #5)</button>
+  </div>
+
+  <div class="counter" id="ctr">This is your <b>5th payment</b> to this supplier. <b>$87,200</b> total — all tracked.</div>
+
+  <div class="supplier">
+    <div class="supplier-top">
+      <div class="avatar">SH</div>
+      <div class="s-name">Shenzhen Hongda Electronics</div>
+      <div class="s-loc">Electronic Components · Shenzhen</div>
+      <div class="verified">✓ Verified</div>
+      <div class="stats-row">
+        <div class="stat"><div class="stat-v">4.8★</div><div class="stat-l">Trust</div></div>
+        <div class="stat"><div class="stat-v">156</div><div class="stat-l">Payments</div></div>
+        <div class="stat"><div class="stat-v">3 yrs</div><div class="stat-l">Active</div></div>
+      </div>
+    </div>
+    <div class="details">
+      <div class="d-row"><span class="d-label">Reference</span><span class="d-value">PO-2026-0847</span></div>
+      <div class="d-row"><span class="d-label">Item</span><span class="d-value">USB-C Connectors × 10,000</span></div>
+      <div class="d-row"><span class="d-label">This payment</span><span class="d-value">30% deposit</span></div>
+      <div class="amount-box">
+        <div class="a-sub">Invoiced: ¥45,600 CNY</div>
+        <div class="a-big">$6,240</div>
+        <div class="a-rate">Rate locked · 1 USD = 7.3077 CNY · 24hrs</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pay-card">
+    <div class="pay-title">Pay with</div>
+    <div class="pay-sub">No registration required</div>
+
+    <div class="po" onclick="selO(this,'bank')">
+      <div class="po-ico">🏦</div>
+      <div class="po-content">
+        <div class="po-name">Bank Transfer</div>
+        <div class="po-noreg">No signup needed</div>
+      </div>
+      <div class="po-arrow">›</div>
+    </div>
+
+    <div class="bank-exp" id="bexp">
+      <div class="bk"><span class="bk-l">Beneficiary</span><span><span class="bk-v">Shenzhen Hongda Electronics</span> <button class="cp" onclick="doCopy(this)">Copy</button></span></div>
+      <div class="bk"><span class="bk-l">Bank</span><span><span class="bk-v">China Merchants Bank</span> <button class="cp" onclick="doCopy(this)">Copy</button></span></div>
+      <div class="bk"><span class="bk-l">Account</span><span><span class="bk-v">7559 2810 0410 XXXX</span> <button class="cp" onclick="doCopy(this)">Copy</button></span></div>
+      <div class="bk"><span class="bk-l">SWIFT</span><span><span class="bk-v">CMBCCNBS</span> <button class="cp" onclick="doCopy(this)">Copy</button></span></div>
+      <div class="bk"><span class="bk-l">Ref</span><span><span class="bk-v">WF-PO-2026-0847</span> <button class="cp" onclick="doCopy(this)">Copy</button></span></div>
+    </div>
+
+    <div class="po" onclick="selO(this,'pp')">
+      <div class="po-ico">💳</div>
+      <div class="po-content"><div class="po-name">PayPal</div><div class="po-noreg">No signup needed</div></div>
+      <div class="po-arrow">›</div>
+    </div>
+
+    <div class="po" onclick="selO(this,'card')">
+      <div class="po-ico">💳</div>
+      <div class="po-content"><div class="po-name">Card</div><div class="po-desc">2.5% fee</div></div>
+      <div class="po-arrow">›</div>
+    </div>
+
+    <div class="po" onclick="selO(this,'wf')">
+      <div class="po-tag">SAVE $218</div>
+      <div class="po-ico" style="background:rgba(255,0,81,0.06);">⚡</div>
+      <div class="po-content"><div class="po-name">WorldFirst</div><div class="po-desc">Best rate</div></div>
+      <div class="po-arrow">›</div>
+    </div>
+
+    <button class="cta-btn" onclick="doPay()">Continue</button>
+  </div>
+
+  <div class="savings" id="sav">
+    <div class="sv-title">WorldFirst members save</div>
+    <div class="sv-amt" id="svA">$218</div>
+    <div class="sv-desc" id="svD">on this order with a free business account</div>
+    <a href="#" class="sv-cta">See how →</a>
+  </div>
+
+  <div class="track">
+    <div class="track-title">Tracking</div>
+    <div class="steps">
+      <div class="step"><div class="dot done">✓</div><div class="step-l">Created</div></div>
+      <div class="step"><div class="dot now">2</div><div class="step-l">Pending</div></div>
+      <div class="step"><div class="dot">3</div><div class="step-l">Sent</div></div>
+      <div class="step"><div class="dot">4</div><div class="step-l">Received</div></div>
+    </div>
+  </div>
+
+  <div class="footer">Powered by <a href="#">WorldFirst</a> · Ant International</div>
+</div>
+
+<script>
+  function selO(el,t){
+    document.querySelectorAll('.po').forEach(o=>o.classList.remove('sel'));
+    el.classList.add('sel');
+    document.getElementById('bexp').classList.toggle('show',t==='bank');
+  }
+  function doCopy(b){
+    let v=b.previousElementSibling.textContent;
+    navigator.clipboard.writeText(v);
+    b.textContent='✓';b.style.background='#10b981';
+    setTimeout(()=>{b.textContent='Copy';b.style.background='';},1000);
+  }
+  function sw(v){
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+    event.target.classList.add('on');
+    document.getElementById('ctr').style.display=v==='ret'?'block':'none';
+    document.getElementById('svA').textContent=v==='ret'?'$3,052':'$218';
+    document.getElementById('svD').textContent=v==='ret'?'across 5 orders. Takes 5 minutes to open.':'on this order with a free business account';
+  }
+  function doPay(){
+    let b=document.querySelector('.cta-btn');
+    b.textContent='Processing...';b.style.background='#10b981';
+    setTimeout(()=>b.textContent='✓ Both parties notified',1500);
+  }
+</script>
+</body>
+</html>
